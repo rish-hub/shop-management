@@ -5,9 +5,11 @@ const seceret = require("config").get("jwtSecret");
 
 const maxAge = 3 * 24 * 60 * 60;
 const handleErro = (err) => {
-  if (err.errors.name) return "Name is required";
-  else if (err.errors.password) return "Password is required";
-  else if (err.errors.email) return "Email is required";
+  if (err.errors && err.errors.name) return "Name is required";
+  else if (err.errors && err.errors.password) return "Password is required";
+  else if (err.errors && err.errors.email) return "Email is required";
+  else if (err.message && err.message.includes("dup key: { email"))
+    return "Email is already exists";
 };
 const tokenize = (id) => {
   return jwt.sign({ id }, seceret, {
@@ -19,7 +21,7 @@ module.exports.signup = async (req, res) => {
   const { email, name, password } = req.body;
   try {
     const user = await User.create({ ...req.body });
-    res.status(201).json(user);
+    res.status(201).json({ name: user.name });
   } catch (err) {
     let error = handleErro(err);
     res.status(400).json({ message: error });
