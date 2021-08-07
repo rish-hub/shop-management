@@ -1,13 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { ThemeProvider } from "@material-ui/styles";
+import { CssBaseline } from "@material-ui/core";
+// import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import Themes from "./themes";
+import { LayoutProvider } from "./context/LayoutContext";
+import { UserProvider } from "./context/UserContext";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <LayoutProvider>
+    <UserProvider>
+      <ThemeProvider theme={Themes.default}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </UserProvider>
+  </LayoutProvider>,
   document.getElementById('root')
 );
 
