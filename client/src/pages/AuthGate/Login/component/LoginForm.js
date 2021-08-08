@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 
 const LoginForm = ({ login, error }) => {
   const [creds, setCreds] = React.useState({ email: "", password: "" });
+
   const handleChange = (e) => {
     let newCreds = { ...creds };
     newCreds[e.target.name] = e.target.value;
     setCreds(newCreds);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     login(creds);

@@ -100,12 +100,14 @@ export const StoreProvider = (props) => {
         });
         if (data && data.name && data.token) {
           setUserInfo(data.token, data);
-          history.push("/profile");
+          history.push("/dashboard");
         } else {
           logout();
+          dispatch(actions.response(""));
         }
       } catch (error) {
         console.log("No Data Found", error);
+        dispatch(actions.response(""));
         dispatch(actions.response(error.response.data.message));
       }
     },

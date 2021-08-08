@@ -1,7 +1,8 @@
 import React, { lazy } from "react";
-import { BrowserRouter, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Switch, Redirect, Route } from "react-router-dom";
 import AppRoute from "./components/AppRoute";
 import IndexRedirect from "./redirect";
+import Layout from "./../../components/Layout";
 
 const Login = lazy(() =>
   import(/* webpackChuckName: 'Error' */ "./../AuthGate/Login/Login")
@@ -11,8 +12,8 @@ const Signup = lazy(() =>
   import(/* webpackChuckName: 'Error' */ "../AuthGate/Signup/Signup")
 );
 
-const Profile = lazy(() =>
-  import(/* webpackChuckName: 'Error' */ "./../Profile/Profile")
+const Dashboard = lazy(() =>
+  import(/* webpackChuckName: 'Error' */ "./../dashboard/Dashboard")
 );
 
 export const UnauthenticatedRoutes = () => {
@@ -30,7 +31,13 @@ export const UnauthenticatedRoutes = () => {
 export const AuthenticatedRoutes = () => (
   <BrowserRouter>
     <Switch>
-      <AppRoute path="/profile" as={Profile} />
+      <Route exact path="/" render={() => <Redirect to="/app/dashboard" />} />
+      <Route
+        exact
+        path="/app"
+        render={() => <Redirect to="/app/dashboard" />}
+      />
+      <AppRoute path="/app" component={Layout} />
       <AppRoute path="*" as={IndexRedirect} />
     </Switch>
   </BrowserRouter>

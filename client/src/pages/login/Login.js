@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   CircularProgress,
@@ -10,7 +10,7 @@ import {
   Fade,
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
-import classnames from "classnames";
+// import classnames from "classnames";
 
 // styles
 import useStyles from "./styles";
@@ -22,19 +22,31 @@ import google from "../../images/google.svg";
 // context
 import { useUserDispatch, loginUser } from "../../context/UserContext";
 
-function Login(props) {
+function LoginPage({ login, error }) {
   var classes = useStyles();
 
-  // global
-  var userDispatch = useUserDispatch();
-
   // local
-  var [isLoading, setIsLoading] = useState(false);
-  var [error, setError] = useState(null);
-  var [activeTabId, setActiveTabId] = useState(0);
-  var [nameValue, setNameValue] = useState("");
-  var [loginValue, setLoginValue] = useState("admin@flatlogic.com");
-  var [passwordValue, setPasswordValue] = useState("password");
+  const [creds, setCreds] = React.useState({ email: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTabId, setActiveTabId] = useState(0);
+
+
+  const handleChange = (e) => {
+    let newCreds = { ...creds };
+    newCreds[e.target.name] = e.target.value;
+    setCreds(newCreds);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true)
+    login(creds);
+  };
+
+  useEffect(() => {
+    if (error)
+      setIsLoading(false)
+  }, [error])
 
   return (
     <Grid container className={classes.container}>
@@ -52,93 +64,95 @@ function Login(props) {
             centered
           >
             <Tab label="Login" classes={{ root: classes.tab }} />
-            <Tab label="New User" classes={{ root: classes.tab }} />
+            <Tab label="New User"
+              disabled={true}
+              classes={{ root: classes.tab }} />
           </Tabs>
           {activeTabId === 0 && (
             <React.Fragment>
-              <Typography variant="h1" className={classes.greeting}>
-                Good Morning, User
-              </Typography>
-              <Button size="large" className={classes.googleButton}>
-                <img src={google} alt="google" className={classes.googleIcon} />
-                &nbsp;Sign in with Google
-              </Button>
-              <div className={classes.formDividerContainer}>
-                <div className={classes.formDivider} />
-                <Typography className={classes.formDividerWord}>or</Typography>
-                <div className={classes.formDivider} />
-              </div>
-              <Fade in={error}>
-                <Typography color="secondary" className={classes.errorMessage}>
-                  Something is wrong with your login or password :(
+              <form onSubmit={handleSubmit}>
+                <Typography variant="h1" className={classes.greeting}>
+                  Good Morning, User
                 </Typography>
-              </Fade>
-              <TextField
-                id="email"
-                InputProps={{
-                  classes: {
-                    underline: classes.textFieldUnderline,
-                    input: classes.textField,
-                  },
-                }}
-                value={loginValue}
-                onChange={e => setLoginValue(e.target.value)}
-                margin="normal"
-                placeholder="Email Adress"
-                type="email"
-                fullWidth
-              />
-              <TextField
-                id="password"
-                InputProps={{
-                  classes: {
-                    underline: classes.textFieldUnderline,
-                    input: classes.textField,
-                  },
-                }}
-                value={passwordValue}
-                onChange={e => setPasswordValue(e.target.value)}
-                margin="normal"
-                placeholder="Password"
-                type="password"
-                fullWidth
-              />
-              <div className={classes.formButtons}>
-                {isLoading ? (
-                  <CircularProgress size={26} className={classes.loginLoader} />
-                ) : (
+                <Button
+                  disabled={true}
+                  size="large" className={classes.googleButton}>
+                  <img src={google} alt="google" className={classes.googleIcon} />
+                  &nbsp;Sign in with Google
+                </Button>
+                <div className={classes.formDividerContainer}>
+                  <div className={classes.formDivider} />
+                  <Typography className={classes.formDividerWord}>or</Typography>
+                  <div className={classes.formDivider} />
+                </div>
+                <Fade in={error}>
+                  <Typography color="secondary" className={classes.errorMessage}>
+                    Something is wrong with your login or password :(
+                  </Typography>
+                </Fade>
+                <TextField
+                  id="email"
+                  name="email"
+                  required
+                  value={creds.email}
+                  onChange={handleChange}
+                  InputProps={{
+                    classes: {
+                      underline: classes.textFieldUnderline,
+                      input: classes.textField,
+                    },
+                  }}
+                  margin="normal"
+                  placeholder="Email Adress"
+                  type="email"
+                  fullWidth
+                />
+                <TextField
+                  id="password"
+                  InputProps={{
+                    classes: {
+                      underline: classes.textFieldUnderline,
+                      input: classes.textField,
+                    },
+                  }}
+                  name="password"
+                  required
+                  value={creds.password}
+                  onChange={handleChange}
+                  margin="normal"
+                  placeholder="Password"
+                  type="password"
+                  fullWidth
+                />
+                <div className={classes.formButtons}>
+                  {isLoading ? (
+                    <CircularProgress size={26} className={classes.loginLoader} />
+                  ) : (
+                    <Button
+                      type="submit"
+                      disabled={
+                        creds.email.length === 0 || creds.password.length === 0
+                      }
+
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                    >
+                      Login
+                    </Button>
+                  )}
                   <Button
-                    disabled={
-                      loginValue.length === 0 || passwordValue.length === 0
-                    }
-                    onClick={() =>
-                      loginUser(
-                        userDispatch,
-                        loginValue,
-                        passwordValue,
-                        props.history,
-                        setIsLoading,
-                        setError,
-                      )
-                    }
-                    variant="contained"
                     color="primary"
                     size="large"
+                    className={classes.forgetButton}
                   >
-                    Login
+                    Forget Password
                   </Button>
-                )}
-                <Button
-                  color="primary"
-                  size="large"
-                  className={classes.forgetButton}
-                >
-                  Forget Password
-                </Button>
-              </div>
+                </div>
+              </form>
             </React.Fragment>
           )}
-          {activeTabId === 1 && (
+          {/* {activeTabId === 1 && (
             <React.Fragment>
               <Typography variant="h1" className={classes.greeting}>
                 Welcome!
@@ -232,6 +246,7 @@ function Login(props) {
                 <div className={classes.formDivider} />
               </div>
               <Button
+                disabled={true}
                 size="large"
                 className={classnames(
                   classes.googleButton,
@@ -242,14 +257,14 @@ function Login(props) {
                 &nbsp;Sign in with Google
               </Button>
             </React.Fragment>
-          )}
+          )} */}
         </div>
         <Typography color="primary" className={classes.copyright}>
-        © 2014-{new Date().getFullYear()} <a style={{ textDecoration: 'none', color: 'inherit' }} href="https://flatlogic.com" rel="noopener noreferrer" target="_blank">Flatlogic</a>, LLC. All rights reserved.
+          {/* ©  {new Date().getFullYear()} <a style={{ textDecoration: 'none', color: 'inherit' }} href="#" rel="noopener noreferrer" target="_blank">Flatlogic</a>, LLC. All rights reserved. */}
         </Typography>
       </div>
-    </Grid>
+    </Grid >
   );
 }
 
-export default withRouter(Login);
+export default withRouter(LoginPage);

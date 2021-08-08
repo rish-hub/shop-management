@@ -21,6 +21,7 @@ import {
   YAxis,
   XAxis,
 } from "recharts";
+import { Store } from "./../AuthGate/context/authContext";
 
 // styles
 import useStyles from "./styles";
@@ -45,6 +46,7 @@ const PieChartData = [
 export default function Dashboard(props) {
   var classes = useStyles();
   var theme = useTheme();
+  const { logout } = React.useContext(Store);
 
   // local
   var [mainChartState, setMainChartState] = useState("monthly");
