@@ -1,0 +1,19 @@
+.form-holder {
+    & .rows {
+        display: flex;
+
+        & .action-button {
+            padding: 0.5rem;
+            display       : flex;
+            flex-direction: row;
+            margin-left   : auto;
+            gap: 1rem;
+
+            button:hover{
+                background-color: #FF5E00;
+                color: #fff;
+            }
+        }
+
+    }
+}

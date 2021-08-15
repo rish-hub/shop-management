@@ -34,6 +34,7 @@ import Charts from "../../pages/charts";
 
 // context
 import { useLayoutState } from "../../context/LayoutContext";
+import CustomerMaster from "../../pages/Master/Customer";
 
 function Layout(props) {
   var classes = useStyles();
@@ -61,10 +62,12 @@ function Layout(props) {
                 exact
                 path="/app/ui"
                 render={() => <Redirect to="/app/ui/icons" />}
-              />
+              /> 
               <Route path="/app/ui/maps" component={Maps} />
               <Route path="/app/ui/icons" component={Icons} />
               <Route path="/app/ui/charts" component={Charts} />
+              {/* Masters */}
+              <Route path="/app/master/customer" component={CustomerMaster} />
             </Switch>
             <Box
               mt={5}

@@ -1,0 +1,14 @@
+.ct-master {
+    & .heading {
+        .text {
+            color: #313131;
+        }
+    }
+
+    & .customer-form {
+        width     : 40%;
+        background: #fff;
+        padding   : 2rem;
+        box-shadow: 1px 1px 0px 0px #e4dbdb;
+    }
+}

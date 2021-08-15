@@ -33,6 +33,18 @@ const structure = [
   { id: 0, label: "Dashboard", link: "/app/dashboard", icon: <HomeIcon /> },
   {
     id: 1,
+    label: "Master",
+    link: "/app/ui",
+    icon: <UIElementsIcon />,
+    children: [
+      { label: "Customer", link: "/app/master/customer" },
+      { label: "Icons", link: "/app/ui/icons" },
+      { label: "Charts", link: "/app/ui/charts" },
+      { label: "Maps", link: "/app/ui/maps" },
+    ],
+  },
+  {
+    id: 4,
     label: "Typography",
     link: "/app/typography",
     icon: <TypographyIcon />,
@@ -44,18 +56,7 @@ const structure = [
     link: "/app/notifications",
     icon: <NotificationsIcon />,
   },
-  {
-    id: 4,
-    label: "Master",
-    link: "/app/ui",
-    icon: <UIElementsIcon />,
-    children: [
-      { label: "Customer", link: "/app/ui/icons" },
-      { label: "Icons", link: "/app/ui/icons" },
-      { label: "Charts", link: "/app/ui/charts" },
-      { label: "Maps", link: "/app/ui/maps" },
-    ],
-  },
+
   { id: 5, type: "divider" },
   { id: 6, type: "title", label: "HELP" },
   { id: 7, label: "Library", link: "https://flatlogic.com/templates", icon: <LibraryIcon /> },
@@ -94,7 +95,7 @@ function Sidebar({ location }) {
   // local
   var [isPermanent, setPermanent] = useState(true);
 
-  useEffect(function() {
+  useEffect(function () {
     window.addEventListener("resize", handleWindowWidthChange);
     handleWindowWidthChange();
     return function cleanup() {

@@ -6,6 +6,7 @@ const app = express();
 const morgan = require('morgan');
 const auth = require('./routes/api/auth');
 const user = require('./routes/api/user');
+const customer = require('./routes/api/customer');
 
 
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use(morgan('dev'));
 
 app.use('/auth', auth);
 app.use('/user', user);
+app.use('/customer', customer);
 
 // /Error handling
 app.use((req, res, next) => {

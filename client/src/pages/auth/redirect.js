@@ -6,9 +6,8 @@ import { Store } from "./../AuthGate/context/authContext";
 const IndexRedirect = () => {
   const { state } = React.useContext(Store);
   const route = {
-    to: state.isLoggedIn ? "/profile" : "/login",
+    to: state.isLoggedIn ? "/" : "/login",
   };
-console.log(state, 'statestatestate')
   return <Redirect to={route.to} />;
 };
 
