@@ -3,6 +3,7 @@ import React, { useCallback, useReducer, useEffect } from "react";
 import axios from "axios";
 const initialState = {
     customers: [],
+    searchCustomers: [],
     isLoading: false,
     customer: {},
     isCreated: false,
@@ -40,8 +41,13 @@ export function createReducer(actionsMap) {
 const AuthReducer = createReducer({
     [actions.fetchCustomerList.toString()]: (state, { payload }) => {
         return {
-            ...state,
-            isLoading: false,
+            ...initialState,
+            ...payload,
+        };
+    },
+    [actions.fetchSearchResult.toString()]: (state, { payload }) => {
+        return {
+            ...initialState,
             ...payload,
         };
     },
@@ -70,16 +76,46 @@ const AuthReducer = createReducer({
 export const CustomerProvider = (props) => {
     const [state, dispatch] = useReducer(AuthReducer, initialState);
 
-    const createCustomer = useCallback(async(value, history) => {
+    const createCustomer = useCallback(async (value, history) => {
         try {
             const { data } = await axios.post(`/customer/create`, {
                 method: "post",
                 ...value,
             });
-            console.log(data, 'datadata')
+            if (data) {
+                getCustomers();
+            }
         } catch (err) { console.log(err) }
-    })
+    });
 
+    const getCustomers = useCallback(async () => {
+        try {
+            const { data } = await axios.get(`/customer/getCustomers`, {
+            });
+            if (data) {
+                const res = {
+                    customers: data,
+                    isLoading: false,
+                    customer: {},
+                    isCreated: false,
+                    msg: "",
+                }
+                dispatch(actions.fetchCustomerList(res));
+            }
+        } catch (err) { console.log(err) }
+    });
+    const getSearchedCustomers = useCallback(async (value) => {
+        try {
+            const { data } = await axios.get(`/customer/searchCustomers?customer=${value.name||""}&phone=${value.phone||""}`, {
+            });
+            if (data) {
+                const res = {
+                    searchCustomers: data,
+                }
+                dispatch(actions.fetchSearchResult(res));
+            }
+        } catch (err) { console.log(err) }
+    });
     // const login = useCallback(
     //     async (value, history) => {
     //         try {
@@ -149,7 +185,7 @@ export const CustomerProvider = (props) => {
     //     setUserInfo(token, user);
     // }, [setUserInfo, logout]);
     return (
-        <Store.Provider value={{ createCustomer }}>
+        <Store.Provider value={{ state, createCustomer, getCustomers, getSearchedCustomers }}>
             {props.children}
         </Store.Provider>
     );

@@ -15,6 +15,8 @@ const useStyles = makeStyles((theme) =>
     }),
 );
 
+
+
 export default function CustomerForm(props) {
     const intialObj = {
         id: "",
@@ -29,6 +31,7 @@ export default function CustomerForm(props) {
 
 
     const handleChange = (event) => {
+        event.preventDefault();
         const newVal = { ...initialValue };
         newVal[event.target.name] = event.target.value
         const { name, email, phone, address } = newVal;
@@ -38,13 +41,14 @@ export default function CustomerForm(props) {
         } else {
             setDisbaled(true)
         }
+        if (["name", "phone"].includes(event.target.name)) {
+            props.searchOnchange(event.target.value, event.target.name);
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(e, 'data')
         props.createCustomer(initialValue)
-
     }
     const handleReset = () => {
         setDisbaled(true)
